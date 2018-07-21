@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <!--<script src="/socket.io/socket.io.js"></script>-->
+  <script src="http://localhost:8801/socket.io/socket.io.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script>
+      var socket = io.connect('http://localhost:8801');
+      //var socket = io();
+      socket.on('connection',function() {
+          console.log('Client has connected to the server!');
+      });
+
+      socket.on('news', function (data) {
+          $("#iomsg").html(data);
+          socket.emit('newresponse', 'this is news response');
+      });
+  </script>
+</head>
+<body>
+<h1><%=message%></h1>
+<p>Welcome to <%= title %></p>
+<div style="color:#3333ff;" id='iomsg'></div>
+</body>
+</html>
