@@ -45,6 +45,7 @@ module.exports = app;
 var port = 8801;
 var io = require('socket.io').listen(port);
 
+var count = 1;
 io.on('connection', function (socket) {
     console.log('user connected: ', socket.id);
 
@@ -56,6 +57,15 @@ io.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         console.log('user disconnected :'+socket.id);
+    });
+
+    var name = "user" + count++;
+    io.to(socket.id).emit('change name', name);
+
+    socket.on('send message',function (name, text) {
+        var msg = name + ' : ' + text;
+        console.log(msg);
+        io.emit('receive message', msg);
     });
 });
 

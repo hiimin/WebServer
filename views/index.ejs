@@ -13,9 +13,22 @@
           console.log('Client has connected to the server!');
       });
 
-      socket.on('news', function (data) {
+      socket.on('news', function (data) { 
           $("#iomsg").html(data);
           socket.emit('newresponse', 'this is news response');
+      });
+      $('#chat').on('submit', function(e){ //2
+          socket.emit('send message', $('#name').val(), $('#message').val());
+          $('#message').val('');
+          $('#message').focus();
+          e.preventDefault();
+      });
+      socket.on('receive message', function(msg){ //3
+          $('#chatLog').append(msg+'\n');
+          $('#chatLog').scrollTop($('#chatLog')[0].scrollHeight);
+      });
+      socket.on('change name', function(name){ //4
+          $('#name').val(name);
       });
   </script>
 </head>
@@ -23,5 +36,15 @@
 <h1><%=message%></h1>
 <p>Welcome to <%= title %></p>
 <div style="color:#3333ff;" id='iomsg'></div>
+
+<div>
+  <textarea id="chatLog" class="chat_log" readonly></textarea>
+</div>
+<form id="chat">
+  <input id="name" class="name" type="text" readonly>
+  <input id="message" class="message" type="text">
+  <input class="chat" type="submit" value="chat"/>
+</form>
+
 </body>
 </html>
