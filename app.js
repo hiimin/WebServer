@@ -41,9 +41,15 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-
 var port = 8801;
-var io = require('socket.io').listen(port);
+var server = app.listen(port, function () {
+    console.log('Express listening on port', port);
+});
+var listen = require('socket.io');
+var io = listen(server);
+
+//var port = 8801;
+//var io = require('socket.io').listen(port);
 
 var count = 1;
 io.on('connection', function (socket) {
