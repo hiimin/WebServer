@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%=title%></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<h1><%=title%></h1>
+<div class="jumbotron container" style="max-width: 400px">
+    <form action="/signup" method="post">
+        <p>
+            <label for="input"><strong>name</strong></label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>ID</strong></label>
+            <input type="text" id="id" name="id" class="form-control" placeholder="ID를 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>password</strong></label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호를 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>confirm PW</strong></label>
+            <input type="password" id="confirmPW" name="confirmPW" class="form-control" placeholder="비밀번호 확인" required>
+        </p>
+        <p>
+            <label for="input"><strong>주소</strong></label>
+            <input type="text" id="address" name="address" class="form-control" placeholder="주소를 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>핸드폰 번호</strong></label>
+            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="핸드폰 번호를 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>비상연락처</strong></label>
+            <input type="text" id="emergencyInfo" name="emergencyInfo" class="form-control" placeholder="비상연락처를 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>핸드폰 번호</strong></label>
+            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="핸드폰 번호를 입력하시오" required>
+        </p>
+        <p>
+            <input type="radio" name="gender" value="man">남
+            <input type="radio" name="gender" value="woman">여
+        </p>
+        <p>
+            <label for="input"><strong>장애유형</strong></label>
+            <input type="text" id="disabilityType" name="disabilityType" class="form-control" placeholder="장애유형을 입력하시오" required>
+        </p>
+        <p>
+            <label for="input"><strong>장애급수</strong></label>
+            <input type="text" id="disabilityGrade" name="disabilityGrade" class="form-control" placeholder="장애급수를 입력하시오(숫자만)" required>
+        </p>
+        <button class="btn" type="submit" >Sign up and login</button>
+    </form>
+</div>
+<script src="https://ajax.gooleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+</body>
+</html>
