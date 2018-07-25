@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -11,6 +12,25 @@ var loginRouter = require('./routes/login');
 var signupRouter = require('./routes/signup');
 
 var app = express();
+
+app.use(session({   //router 위에 있어야됨(이유..?)
+    key: 'sid',
+    secret: 'dl123wjd098als567',
+    resave: false,  //resave 세션아이디를 접속할때마다 발급하지 않는다
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 24000*60*60 //쿠키 유효시간 24시간
+    }
+}));
+
+mongoose.connect('mongodb://localhost:27017/test');
+var db = mongoose.connection;
+db.on('error', function () {
+    console.log('db connection Failed');
+});
+db.once('open', function () {
+    console.log('db connected');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
