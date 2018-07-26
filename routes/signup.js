@@ -40,14 +40,17 @@ router.post('/',function (req,res,next) {
             });
             newUser.save(function (err,newUser) {
                 if(err) return console.error(err);
-                console.dir(newUser);
+                else {
+                    console.dir(newUser);
+                    res.redirect('/');
+                }
             });
         }
         else{
             console.log('id is already exist.');
+            res.redirect('/signup');
         }
     });
-    res.redirect('/');
    /* var name = req.body.name;
     var nickname = req.body.nickname;
     var id = req.body.id;
