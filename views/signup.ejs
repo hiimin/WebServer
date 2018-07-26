@@ -8,7 +8,7 @@
 <body>
 <h1><%=title%></h1>
 <div class="jumbotron container" style="max-width: 400px">
-    <form action="/signup" method="post">
+    <form action="/signup" onsubmit="return checkPW()" method="post">
         <p>
             <label for="input"><strong>name</strong></label>
             <input type="text" id="name" name="name" class="form-control" placeholder="이름을 입력하시오" required>
@@ -25,6 +25,7 @@
             <label for="input"><strong>confirm PW</strong></label>
             <input type="password" id="confirmPW" name="confirmPW" class="form-control" placeholder="비밀번호 확인" required>
         </p>
+        <p id = "pwsame" style="color:red;"></p>
         <p>
             <label for="input"><strong>주소</strong></label>
             <input type="text" id="address" name="address" class="form-control" placeholder="주소를 입력하시오" required>
@@ -52,6 +53,17 @@
         <button class="btn" type="submit" >Sign up and login</button>
     </form>
 </div>
+<script type="text/javascript">
+    function checkPW() {
+        var pw = document.getElementById("password").value;
+        var conpw = document.getElementById("confirmPW").value;
+
+        if(pw!=conpw){
+            document.getElementById('pwsame').innerHTML = '비밀번호가 틀렸습니다.'
+            return false;
+        }
+    }
+</script>
 <script src="https://ajax.gooleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.js"></script>
 </body>

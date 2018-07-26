@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
 router.post('/',function (req,res,next) {
     console.log(req.body);
     model.find({id:req.body.id},function(err,data){
-        console.log('State==> data : '+data);
+        //console.log('State==> data : '+data);
         if(data.length==0){
             var newUser = new model({
                 name: req.body.name,
@@ -44,7 +44,7 @@ router.post('/',function (req,res,next) {
             });
         }
         else{
-            console.log('State==> id is already exist.');
+            console.log('id is already exist.');
         }
     });
     res.redirect('/');

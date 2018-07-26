@@ -78,7 +78,7 @@ var io = listen(server);
 
 var count = 1;
 io.on('connection', function (socket) {
-    console.log('user connected: ', socket.id);
+    console.log('(socket)user connected: ', socket.id);
 
     socket.emit('news', 'This is the news');
 
@@ -86,7 +86,7 @@ io.on('connection', function (socket) {
         console.log(data);
     });
 
-    socket.on('disconnect', function () {
+    socket.on('(socket)disconnect', function () {
         console.log('user disconnected :'+socket.id);
     });
 
