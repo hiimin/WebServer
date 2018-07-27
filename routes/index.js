@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'WebChat'});
+  res.render('index', { title: req.session.userID});
 });
 
 module.exports = router;

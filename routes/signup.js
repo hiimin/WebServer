@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 //var connection = require('../public/javascripts/dbconnection');
 
 var user = mongoose.Schema({
@@ -15,7 +15,7 @@ var user = mongoose.Schema({
     disabilityGrade : String
 });
 
-var model = mongoose.model('user',user);
+var model = mongoose.model('user2',user);
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
