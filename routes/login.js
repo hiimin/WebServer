@@ -33,6 +33,8 @@ router.post('/',function (req,res,next) {
             res.json({success: false, msg: '해당 유저가 존재하지 않습니다.'});
         }else{
             session.userID = userID;
+            var userName = model.find({id:userID},{name:1});
+            console.log(userName);
             res.redirect('/');
         }
     });
