@@ -10,6 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var signupRouter = require('./routes/signup');
+var weatherRouter = require('./routes/weather');
 
 var app = express();
 
@@ -46,7 +47,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login',loginRouter);
 app.use('/signup',signupRouter);
-app.use('/index',indexRouter)
+app.use('/index',indexRouter);
+app.use('/weather', weatherRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -100,13 +102,52 @@ io.on('connection', function (socket) {
     });
 });
 
+function getLocation(){
+    if(navigator.geolocation){
+        /*navigator.geolocation.getCurrentPosition(function(position){
+            locationsuccess(position.coords.latitude,position.coords.longitude);
+    });*/
+        navigator.geolocation.getCurrentPosition(locationSuccess, locationError, geo_options)
+    }else{
+        console.log("지오 로케이션 없음")
+    }
+};
+// getLocation
 
+function locationSuccess(p) {
+    var latitude = p.coords.latitude;
+    var longitude = p.coords.longitude;
+    var rs = dfs_xy_conv("toXY",latitude, longitude);
+    xml2jsonCurrentWth(rs.nx, rs.ny);
+}
 
+function locationError(error){
+    var errorTypes = {
+        0 : "무슨 에러냥~",
+        1 : "허용 안눌렀음",
+        2 : "위치가 안잡힘",
+        3 : "응답시간 지남"
+    };
+    var errorMsg = errorTypes[error.code];
+    console.log(errorMsg)
+}
+// locationError
 
+var geo_options = {
+    enableHighAccuracy: true,
+    maximumAge        : 30000,
+    timeout           : 27000
+};
+// geo_options
 
+/*navigator.geolocation.getCurrentPosition(function(position){
+   locationsuccess(position.coords.latitude,position.coords.longitude);
+});
 
-
-
+function locationsuccess(la,lo) {
+    var rs = dfs_xy_conv("toXY",la,lo);
+    console.log(rs.nx+" "+rs.ny);
+}*/
 
 //기상청의 위치를 나누는 면적 계산
 // LCC DFS 좌표변환을 위한 기초 자료
@@ -146,7 +187,8 @@ function dfs_xy_conv(code, v1, v2) {
         var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
         ra = re * sf / Math.pow(ra, sn);
         var theta = v2 * DEGRAD - olon;
-        if (theta > Math.PI) theta -= 2.0 * Math.PI;
+        if (theta > Math.PI) theta
+            -= 2.0 * Math.PI;
         if (theta < -Math.PI) theta += 2.0 * Math.PI;
         theta *= sn;
         rs['nx'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
@@ -179,3 +221,81 @@ function dfs_xy_conv(code, v1, v2) {
     return rs;
 }
 // dfs_xy_conv
+
+function xml2jsonCurrentWth(nx, ny){
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    console.log("time " + minutes)
+
+    if(minutes < 30){
+        // 30분보다 작으면 한시간 전 값
+        hours = hours - 1;
+        if(hours < 0){
+            // 자정 이전은 전날로 계산
+            today.setDate(today.getDate() - 1);
+            dd = today.getDate();
+            mm = today.getMonth()+1;
+            yyyy = today.getFullYear();
+            hours = 23;
+        }
+    }
+    if(hours<10) {
+        hours='0'+hours
+    }
+    if(mm<10) {
+        mm='0'+mm
+    }
+    if(dd<10) {
+        dd='0'+dd
+    }
+
+    var _nx = nx,
+        _ny = ny,
+        apikey = "PG8sCezIEVyAJJCkSMeINV40rmHpB%2F32NSAIzyM4L2%2FPjjS7pFcDSNCWdlcZ17zgNv4pQm7UPMcppuYCUj30%2Bw%3D%3D",
+        today = yyyy+""+mm+""+dd,
+        basetime = hours + "00",
+        fileName = "http://newsky2.kma.go.kr/service/SecndSrtpdFrcstInfoService/ForecastGrib";
+    fileName += "?ServiceKey=" + apikey;
+    fileName += "&base_date=" + today;
+    fileName += "&base_time=" + basetime;
+    fileName += "&nx=" + _nx + "&ny=" + _ny;
+    fileName += "&pageNo=1&numOfRows=6";
+    fileName += "&_type=json";
+
+    $.ajax({
+        url: fileName,
+        // dataType: "jsonp",
+        type: 'GET',
+        cache: false,
+        success: function(data) {
+            var myXML = rplLine(data.responseText);
+            var indexS = myXML.indexOf(""),
+            indexE = myXML.indexOf(""),
+            result = myXML.substring(indexS + 3, indexE);
+            var jsonObj = $.parseJSON('[' + result + ']'),
+                rainsnow = jsonObj[0].response.body.items.item[0].obsrValue,
+                sky = jsonObj[0].response.body.items.item[4].obsrValue,
+                temp = jsonObj[0].response.body.items.item[5].obsrValue;
+            var contentText = document.getElementById('content');
+            contentText.innerHTML = sky + " / " + rainsnow + " / " + temp;
+        },
+        error:function(request,status,error){
+            alert("다시 시도해주세요.\n" + "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+    });
+
+}
+// xml2jsonCurrentWth
+
+function rplLine(value){
+    if (value != null && value != "") {
+        return value.replace(/\n/g, "\\n");
+    }else{
+        return value;
+    }
+}
+// rplLine

@@ -40,4 +40,13 @@ router.post('/',function (req,res,next) {
     });
 
 });
+
+/*var la;
+var lo;
+navigator.geolocation.getCurrentPosition(function(please){
+    la = please.coords.latitude;
+    lo = please.coords.longitude;
+});*/
+//console.log(la+" "+lo);
+
 module.exports = router;
